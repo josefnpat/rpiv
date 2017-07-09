@@ -1,6 +1,7 @@
 states.game = {}
 
 function states.game.enter()
+  str2img(images['ss.rle'])
   --music()
   player = {
     x = 64,
