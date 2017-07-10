@@ -55,7 +55,6 @@ function states.menu.load(self)
       exec = function()
         str2img(images['alita.rle'])
         self:changeMenu("credits")
-        self.cur = #self.curm
       end,
     },
   }
@@ -71,7 +70,10 @@ function states.menu.load(self)
   self.m.story = {
     {
       text = function() return "intro" end,
-      exec = function() end
+      exec = function()
+        states.cutscene.current = 1
+        changeState(states.cutscene)
+      end
     },
     {
       text = function() return "level 1 (locked)" end,
