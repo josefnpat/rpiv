@@ -14,6 +14,17 @@ end
 
 function _init()
   changeState(states.splash)
+
+  if not images['ss.rle'] then
+    spr_orig = {}
+    for x = 0,127 do
+      spr_orig[x] = {}
+      for y = 0,127 do
+        spr_orig[x][y] = sget(x,y)
+      end
+    end
+  end
+
 end
 
 function _validate_color(col)

@@ -1,14 +1,21 @@
 states.splash = {}
 
 function states.splash.enter(self)
-  str2img(images['mss.rle'])
+  if images['mss.rle'] then
+    str2img(images['mss.rle'])
+  end
   self.fadein = 0
 end
 
 function states.splash.draw(self)
   cls()
   pallight(self.fadein or self.fadeout or 100)
-  spr(0,0,0,16,16)
+  if images['mss.rle'] then
+    spr(0,0,0,16,16)
+  else
+    printb("missing sentinel software",12,64-4)
+    printb("presents",44,64+4)
+  end
 end
 
 function states.splash.update(self)

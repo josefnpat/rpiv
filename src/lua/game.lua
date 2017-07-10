@@ -1,8 +1,19 @@
 states.game = {}
 
 function states.game.enter()
-  str2img(images['ss.rle'])
-  --music()
+
+  music()
+
+  if images['ss.rle'] then
+    str2img(images['ss.rle'])
+  else
+    for x = 0,127 do
+      for y = 0,127 do
+        sset(x,y,spr_orig[x][y])
+      end
+    end
+  end
+
   player = {
     x = 64,
     y = 96,
