@@ -4,10 +4,18 @@ function states.cutscene.load(self)
   self.c = {
     -- intro [1]
     {
-      {draw='level1.rle'},
-      {middle='earth is all but lost'},
-      {draw='alita.rle'},
-      {bottom='i will save it!'},
+      {place='level1.rle'},
+      {placetext='earth is all but lost!'},
+      {place='level2.rle'},
+      {placetext='level 2'},
+      {place='level3.rle'},
+      {placetext='level 3'},
+      {person='alita.rle'},
+      {persontext='i will save it!'},
+      {person='hugo.rle'},
+      {persontext='no, i will save it!'},
+      {person='infested.rle'},
+      {persontext='i will destroy it!'},
     },
   }
 end
@@ -21,15 +29,15 @@ end
 function states.cutscene.draw(self)
   cls()
   pallight(self.fadein or 100)
-  spr(0,0,0,16,16)
+  spr(0,0,0,16,self.place and 8 or 16)
   pal()
   local frame = self.c[self.current][self.frame]
-  if frame.middle or frame.bottom then
-    local text = sub(frame.middle or frame.bottom,1,self.textlen)
+  if frame.placetext or frame.persontext then
+    local text = sub(frame.placetext or frame.persontext,1,self.textlen)
     local xoffset = (128 - #text*4)/2
     local yoffset = 128-8-4
-    if frame.middle then
-      yoffset = 64-4
+    if frame.placetext then
+      yoffset = 96-4
     end
     printb(text,xoffset,yoffset)
   end
@@ -54,9 +62,10 @@ function states.cutscene.nextframe(self)
   self.frame += 1
   local frame = self.c[self.current][self.frame]
   if frame then
-    if frame.draw then
+    if frame.place or frame.person then
       self.fadein = 0
-      str2img(images[frame.draw])
+      self.place = frame.place or false
+      str2img(images[frame.place or frame.person])
     end
   else
     changeState(previousState or states.menu)

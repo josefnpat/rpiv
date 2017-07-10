@@ -22,6 +22,13 @@ local menu = {
       img2str(0,0,127,127,true)
     end,
   },
+  {
+    title = "Export 128x64 to stdout",
+    exec = function()
+      img2str(0,0,127,63,true)
+    end,
+  },
+
 }
 
 function _update()
