@@ -29,8 +29,10 @@ sed -i '/^$/d' ${RAW}
 for file in ${TARGET}images/*.rle ; do
   echo $file
   echo images\[\"${file##*/}\"\]= >> ${RAW}
-  cat $file >> ${RAW}
-  printf "\n" >> ${RAW}
+  printf "[[" >> ${RAW}
+  #cat $file >> ${RAW}
+  printf %s "$(cat $file)" >> ${RAW}
+  printf "]]\n" >> ${RAW}
 done
 
 cat ${RAW} >> ${OUTPUT}

@@ -5,7 +5,7 @@ function states.game.enter()
   music()
 
   if images['ss.rle'] then
-    str2img(images['ss.rle'])
+    rle(images['ss.rle'])
   else
     for x = 0,127 do
       for y = 0,127 do

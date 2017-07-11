@@ -65,7 +65,7 @@ function states.cutscene.nextframe(self)
     if frame.place or frame.person then
       self.fadein = 0
       self.place = frame.place or false
-      str2img(images[frame.place or frame.person])
+      rle(images[frame.place or frame.person])
     end
   else
     changeState(previousState or states.menu)

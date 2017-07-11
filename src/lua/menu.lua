@@ -39,21 +39,28 @@ function states.menu.load(self)
     {
       text = function() return "story" end,
       exec = function()
-        str2img(images['hugo.rle'])
+        rle(images['hugo.rle'])
         self:changeMenu("story")
       end,
     },
     {
       text = function() return "options" end,
       exec = function()
-        str2img(images['infested.rle'])
+        rle(images['infested.rle'])
         self:changeMenu("options")
+      end,
+    },
+    {
+      text = function() return "music" end,
+      exec = function()
+        rle(images['hugo.rle'])
+        self:changeMenu("sound")
       end,
     },
     {
       text = function() return "credits" end,
       exec = function()
-        str2img(images['alita.rle'])
+        rle(images['alita.rle'])
         self:changeMenu("credits")
       end,
     },
@@ -62,22 +69,18 @@ function states.menu.load(self)
   local return_to_menu = {
     text = function() return "back" end,
     exec = function()
-      str2img(images['alita.rle'])
+      rle(images['alita.rle'])
       self:changeMenu("main")
     end,
   }
 
   self.m.story = {
     {
-      text = function() return "intro" end,
+      text = function() return "level 1" end,
       exec = function()
         states.cutscene.current = 1
         changeState(states.cutscene)
       end
-    },
-    {
-      text = function() return "level 1 (locked)" end,
-      exec = function() end
     },
     {
       text = function() return "level 2 (locked)" end,
@@ -105,8 +108,48 @@ function states.menu.load(self)
     return_to_menu,
   }
 
+  self.m.sound = {
+    {
+      text = function() return "play weapon sfx" end,
+      qexec = function() sfx(sfxdata.weapon) end,--,musicdata.sfx_channel) end,
+    },
+    {
+      text = function() return "level ["..self.music_level.."]" end,
+      qexec = function() self.music_level = self.music_level%4+1 end,
+    },
+    {
+      text = function() return "play cutscene "..self.music_level end,
+      qexec = function()
+        local pattern = musicdata.cutscene[self.music_level]
+        if pattern then 
+          music(pattern)
+        end
+      end,
+    },
+    {
+      text = function() return "play level "..self.music_level end,
+      qexec = function()
+        local pattern = musicdata.level[self.music_level]
+        if pattern then 
+          music(pattern)
+        end
+      end,
+    },
+    {
+      text = function() return "play boss "..self.music_level end,
+      qexec = function()
+        local pattern = musicdata.boss[self.music_level]
+        if pattern then 
+          music(pattern)
+        end
+      end,
+    },
+    return_to_menu,
+  }
+
   self.m.credits = {
     {text = function() return "#fc_jam & #awfuljams" end,},
+	{text = function() return "git:v"..git_count.."["..git.."]" end,},
     {text = function() return "code: @josefnpat" end,},
     {text = function() return "art: @bytedesigning" end,},
     {text = function() return "music/sfx: @johnplzplaybass" end,},
@@ -121,7 +164,8 @@ function states.menu.enter(self)
   self.cur = 1
   self.fadeout = nil
   self.fadein = 100
-  str2img(images['alita.rle'])
+  rle(images['alita.rle'])
+  self.music_level = 1
 end
 
 function states.menu.draw(self)
@@ -162,6 +206,8 @@ function states.menu.update(self)
   if btnp(4) or btn(5) then
     if self.curm[self.cur].exec and not self.fadeout and not self.fadein then
       self.fadeout = 0
+	elseif self.curm[self.cur].qexec then
+	  self.curm[self.cur].qexec()
     end
   end
 

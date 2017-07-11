@@ -19,7 +19,6 @@ end
 plookup = "abcdefghijklmnop"
 clookup = "qrstuvwxyz1234567890=-+[]{};:'<,.>?/!@#$%^&*()"
 
-datlen={1582,1876,2274,22,2480,1048,1450,1136}
 ss=plookup..clookup
 
 function indexof(s,s2)
@@ -34,7 +33,7 @@ end
 
 --converts string to image &
 --draws it to the sprite sheet
-function str2img(str,sx,sy,sw,trans,flip)
+function rle(str,sx,sy,sw,trans,flip)
   sx = sx or 0
   sy = sy or 0
   sw = sw or 128

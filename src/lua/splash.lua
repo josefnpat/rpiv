@@ -2,7 +2,7 @@ states.splash = {}
 
 function states.splash.enter(self)
   if images['mss.rle'] then
-    str2img(images['mss.rle'])
+    rle(images['mss.rle'])
   end
   self.fadein = 0
 end
