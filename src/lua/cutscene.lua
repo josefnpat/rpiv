@@ -2,28 +2,30 @@ states.cutscene = {}
 
 function states.cutscene.load(self)
   self.c = {
-    -- intro [1]
+    -- demo
     {
-      {place='level1.rle'},
+      {place='level1'},
       {placetext='earth is all but lost!'},
-      {place='level2.rle'},
+      {place='level2'},
       {placetext='level 2'},
-      {place='level3.rle'},
+      {place='level3'},
       {placetext='level 3'},
-      {person0='alitahugo.rle',},
+      {person0='alitahugo',},
       {persontext='i will save it!'},
-      {person1='alitahugo.rle'},
+      {person1='alitahugo'},
       {persontext='no, i will save it!'},
-      {person1='mssinfested.rle'},
+      {person1='mssinfested'},
       {persontext='i will destroy it!'},
     },
   }
+  self.c = story
 end
 
 function states.cutscene.enter(self)
   self.current = self.current or 1
   self.frame = 0
   self:nextframe()
+  music(musicdata.cutscene[self.current])
 end
 
 function states.cutscene.draw(self)
@@ -65,8 +67,8 @@ function states.cutscene.nextframe(self)
     if frame.place or frame.person0 or frame.person1 then
       self.fadein = 0
       self.place = frame.place or false
-      rle(
-        images[frame.place or frame.person0 or frame.person1],
+      load_ss(
+        frame.place or frame.person0 or frame.person1,
         frame.person0 and 0 or (frame.person1 and 1 or nil))
     end
   else

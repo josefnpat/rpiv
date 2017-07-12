@@ -4,13 +4,9 @@ function states.game.enter()
 
   music()
 
-  if images['ss.rle'] then
-    rle(images['ss.rle'])
-  else
-    for x = 0,127 do
-      for y = 0,127 do
-        sset(x,y,spr_orig[x][y])
-      end
+  for x = 0,127 do
+    for y = 0,127 do
+	  sset(x,y,spr_orig[x][y])
     end
   end
 

@@ -7,4 +7,3 @@ __lua__
 cartdata"rpiv"
 
 states = {}
-images = {}

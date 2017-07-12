@@ -26,13 +26,19 @@ sed -i 's:--.*$::g' ${RAW}
 #Delete empty lines
 sed -i '/^$/d' ${RAW}
 
-for file in ${TARGET}images/*.rle ; do
-  echo $file
-  echo images\[\"${file##*/}\"\]= >> ${RAW}
-  printf "[[" >> ${RAW}
-  #cat $file >> ${RAW}
-  printf %s "$(cat $file)" >> ${RAW}
-  printf "]]\n" >> ${RAW}
+#for file in ${TARGET}images/*.rle ; do
+#  echo $file
+#  echo images\[\"${file##*/}\"\]= >> ${RAW}
+#  printf "[[" >> ${RAW}
+#  printf %s "$(cat $file)" >> ${RAW}
+#  printf "]]\n" >> ${RAW}
+#done
+
+for file in ${TARGET}images/*.gfx ; do
+  ofile=`basename ${file%%.*}`
+  cat ${TARGET}header.p8 > ${ofile}.p8
+  cat $file >> ${ofile}.p8
+  cat ${TARGET}footer.p8 >> ${ofile}.p8
 done
 
 cat ${RAW} >> ${OUTPUT}

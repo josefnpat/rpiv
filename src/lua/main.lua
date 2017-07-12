@@ -14,13 +14,11 @@ end
 
 function _init()
 
-  if not images['ss.rle'] then
-    spr_orig = {}
-    for x = 0,127 do
-      spr_orig[x] = {}
-      for y = 0,127 do
-        spr_orig[x][y] = sget(x,y)
-      end
+  spr_orig = {}
+  for x = 0,127 do
+    spr_orig[x] = {}
+    for y = 0,127 do
+      spr_orig[x][y] = sget(x,y)
     end
   end
 

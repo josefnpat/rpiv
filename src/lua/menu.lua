@@ -1,10 +1,18 @@
-function printb(t,x,y)
+function printb(t,x,y,c)
+  color(3)
+  for _,v in pairs({{-1,0},{1,0},{0,-1},{0,1}}) do
+    print(t,x+v[1],y+v[2])
+  end
   color(0)
   for _,v in pairs({{-1,-1},{1,1},{1,-1},{-1,1}}) do
     print(t,x+v[1],y+v[2])
   end
-  color(7)
+  color(c or 7)
   print(t,x,y)
+end
+
+function printc(t,y,c)
+  printb(t,(128-#t*4)/2,y,c)
 end
 
 function pallight(i)
@@ -39,28 +47,28 @@ function states.menu.load(self)
     {
       text = function() return "story" end,
       exec = function()
-        rle(images['alitahugo.rle'],1)
+        load_ss('alitahugo',1)
         self:changeMenu("story")
       end,
     },
     {
       text = function() return "options" end,
       exec = function()
-        rle(images['mssinfested.rle'],1)
+        load_ss('mssinfested',1)
         self:changeMenu("options")
       end,
     },
     {
       text = function() return "music" end,
       exec = function()
-        rle(images['alitahugo.rle'],1)
+        load_ss('alitahugo',1)
         self:changeMenu("sound")
       end,
     },
     {
       text = function() return "credits" end,
       exec = function()
-        rle(images['alitahugo.rle'],0)
+        load_ss('alitahugo',0)
         self:changeMenu("credits")
       end,
     },
@@ -69,7 +77,7 @@ function states.menu.load(self)
   local return_to_menu = {
     text = function() return "back" end,
     exec = function()
-      rle(images['alitahugo.rle'],0)
+      load_ss('alitahugo',0)
       self:changeMenu("main")
     end,
   }
@@ -84,19 +92,24 @@ function states.menu.load(self)
     },
     {
       text = function() return "level 2 (locked)" end,
-      exec = function() end
+      exec = function()
+        states.cutscene.current = 2
+        changeState(states.cutscene)
+      end
     },
     {
       text = function() return "level 3 (locked)" end,
-      exec = function() end
+      exec = function()
+        states.cutscene.current = 3
+        changeState(states.cutscene)
+      end
     },
     {
-      text = function() return "ending 1 (locked)" end,
-      exec = function() end
-    },
-    {
-      text = function() return "ending 2 (locked)" end,
-      exec = function() end
+      text = function() return "ending (locked)" end,
+      exec = function()
+        states.cutscene.current = 4
+        changeState(states.cutscene)
+      end
     },
     return_to_menu,
   }
@@ -149,14 +162,26 @@ function states.menu.load(self)
 
   self.m.credits = {
     {text = function() return "#fc_jam + #awfuljams" end,},
-	{text = function() return "git:v"..git_count.."["..git.."]" end,},
+    {text = function() return "git:v"..git_count.."["..git.."]" end,},
     {text = function() return "code: josefnpat" end,},
     {text = function() return "art: bytedesigning" end,},
     {text = function() return "music/sfx: johnplzplaybass" end,},
     return_to_menu,
   }
 
-
+  self.subtitles = {
+    "collector's edition box set",
+    "pre-order bonus dlc",
+    "early access prerelease alpha",
+    "not steam edition",
+    "game of the year edition",
+    "virtual reality release",
+    "internal preview copy",
+    "do not distribute",
+    "pirated version",
+    "insert subtitle here",
+  }
+  self.title = "r e d  p l a n e t  i v"
 end
 
 function states.menu.enter(self)
@@ -164,9 +189,11 @@ function states.menu.enter(self)
   self.cur = 1
   self.fadeout = nil
   self.fadein = 100
-  rle(images['alitahugo.rle'],0)
+  load_ss('alitahugo',0)
   self.music_level = 1
   music(musicdata.menu)
+  local subindex = flr(rnd(#self.subtitles)+1)
+  self.subtitle = self.subtitles[subindex]
 end
 
 function states.menu.draw(self)
@@ -181,34 +208,36 @@ function states.menu.draw(self)
     local textoffset = (self.fadeout or self.fadein or 0)*(self.cur == i and 1 or -1)
     printb(wrap..v.text(),8+textoffset*2,8*(i-1)+offset)
   end
-  local title = "r e d  p l a n e t  i v"
   color(0)
   for x = -2,2,2 do
     for y = -10,0 do
-      print(title,16+x,32+y)
+      print(self.title,16+x,32+y)
     end
   end
-  printb(title,16,32)
+  printb(self.title,16,32)
+  printc(self.subtitle,40,3)
 end
 
 function states.menu.update(self)
-  if btnp(2) then
-    self.cur -= 1
-  elseif btnp(3) then
-    self.cur += 1
-  end
-  if self.cur == 0 then
-    self.cur = #self.curm
-  end
-  if self.cur > #self.curm then
-    self.cur = 1
+  if not self.fadeout then
+    if btnp(2) then
+      self.cur -= 1
+    elseif btnp(3) then
+      self.cur += 1
+    end
+    if self.cur == 0 then
+      self.cur = #self.curm
+    end
+    if self.cur > #self.curm then
+      self.cur = 1
+    end
   end
 
   if btnp(4) or btn(5) then
     if self.curm[self.cur].exec and not self.fadeout and not self.fadein then
       self.fadeout = 0
-	elseif self.curm[self.cur].qexec then
-	  self.curm[self.cur].qexec()
+    elseif self.curm[self.cur].qexec then
+      self.curm[self.cur].qexec()
     end
   end
 

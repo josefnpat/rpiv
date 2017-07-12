@@ -17,7 +17,6 @@ function decomp(src, dest, len)
 end
 
 plookup = "abcdefghijklmnop"
---clookup = "qrstuvwxyz1234567890=-+[]{};:'<,.>?/!@#$%^&*()"
 clookup = [[-!"#$%()*,./:;?[^_{}+<=>0123456789qrstuvwxyz]]
 
 ss=plookup..clookup
