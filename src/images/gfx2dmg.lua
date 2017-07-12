@@ -48,19 +48,23 @@ function combineData(d0,d1)
 
   local ndata = {}
 
-  for x,n in pairs(d0) do
+  --for x,n in pairs(d0) do
+  for x = 0,127 do
     ndata[x] = {}
-    for y,v in pairs(n) do
-      assert(d1[x] and d1[x][y],"data set d0 does not match d1")
+    for y = 0,127 do
+    --for y,v in pairs(n) do
+      --assert(d1[x] and d1[x][y],"data set d0 does not match d1")
       local color0,color1 = val_map[d0[x][y]],val_map[d1[x][y]]
       ndata[x][y] = color0 + color1*4
     end
   end
+  --[[
   for x,n in pairs(d1) do
     for y,v in pairs(n) do
       assert(d0[x] and d0[x][y],"data set d1 does not match d0")
     end
   end
+  --]]
   return ndata
 end
 
@@ -75,8 +79,12 @@ local rev_map = {
 
 local data1 = getData(arg[1])
 local data2 = getData(arg[2])
-for x,n in pairs(combineData(data1,data2)) do
-  for y,v in pairs(n) do
+local cdata = combineData(data1,data2)
+--for x,n in pairs(cdata) do
+for x = 0,127 do
+  --for y,v in pairs(n) do
+  for y = 0,127 do
+    local v = cdata[x][y]
     io.write(rev_map[v] or v)
   end
   io.write("\n")
