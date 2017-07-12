@@ -2,8 +2,8 @@
 sub = string.sub
 
 plookup = "abcdefghijklmnop"
-clookup = "qrstuvwxyz1234567890=-+[]{};:'<,.>?/!@#$%^&*()"
---clookup = [[qrstuvwxyz 1234567890=-+[]{};:'<,.>?/!@#$%^&*()_"{}~]]
+--clookup = "qrstuvwxyz1234567890=-+[]{};:'<,.>?/!@#$%^&*()"
+clookup = [[-!"#$%()*,./:;?[^_{}+<=>0123456789qrstuvwxyz]]
 
 map = {
  ["a"] = 10,

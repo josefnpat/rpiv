@@ -17,7 +17,8 @@ function decomp(src, dest, len)
 end
 
 plookup = "abcdefghijklmnop"
-clookup = "qrstuvwxyz1234567890=-+[]{};:'<,.>?/!@#$%^&*()"
+--clookup = "qrstuvwxyz1234567890=-+[]{};:'<,.>?/!@#$%^&*()"
+clookup = [[-!"#$%()*,./:;?[^_{}+<=>0123456789qrstuvwxyz]]
 
 ss=plookup..clookup
 
@@ -31,12 +32,20 @@ function indexof(s,s2)
   return ret
 end
 
---converts string to image &
+--converts string to image 
 --draws it to the sprite sheet
-function rle(str,sx,sy,sw,trans,flip)
+function rle(str,index,sx,sy,sw,trans,flip)
   sx = sx or 0
   sy = sy or 0
   sw = sw or 128
+
+  local map = {
+    [0] = 0,
+    [1] = 3,
+    [2] = 7,
+    [3] = 11,
+  }
+
   local img={}
   local i=1
   local transparent
@@ -66,11 +75,17 @@ function rle(str,sx,sy,sw,trans,flip)
   local offsetx = 0
   i=1
   while (i<=#img)do
-    if img[i] ~= transparent then
+    if img[i] != transparent then
+      local img_val = img[i]-1
+      if index == 0 then
+        img_val = map[img_val%4]
+      elseif index == 1 then
+        img_val = map[flr(img_val/4)]
+      end -- don't do anything on nil
       if flip then
-        sset(sx+sw-offsetx,y,img[i]-1)
+        sset(sx+sw-offsetx,y,img_val)
       else
-        sset(x,y,img[i]-1)
+        sset(x,y,img_val)
       end
     end
     x+=1

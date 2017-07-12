@@ -14,7 +14,7 @@ echo "git,git_count = \"$GIT\",\"$GIT_COUNT\"" >> ${OUTPUT}
 
 rm -f ${RAW}
 #add and process code
-for file in $TARGET/lua/* ; do
+for file in $TARGET/lua/*.lua ; do
   cat $file >> ${RAW}
   printf "\n" >> ${RAW}
 done

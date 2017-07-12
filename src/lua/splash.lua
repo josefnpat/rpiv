@@ -1,8 +1,8 @@
 states.splash = {}
 
 function states.splash.enter(self)
-  if images['mss.rle'] then
-    rle(images['mss.rle'])
+  if images['mssinfested.rle'] then
+    rle(images['mssinfested.rle'],0)
   end
   self.fadein = 0
 end
@@ -10,7 +10,7 @@ end
 function states.splash.draw(self)
   cls()
   pallight(self.fadein or self.fadeout or 100)
-  if images['mss.rle'] then
+  if images['mssinfested.rle'] then
     spr(0,0,0,16,16)
   else
     printb("missing sentinel software",12,64-4)

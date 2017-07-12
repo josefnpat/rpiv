@@ -13,7 +13,6 @@ function changeState(state)
 end
 
 function _init()
-  changeState(states.splash)
 
   if not images['ss.rle'] then
     spr_orig = {}
@@ -24,6 +23,8 @@ function _init()
       end
     end
   end
+
+  changeState(states.splash)
 
 end
 

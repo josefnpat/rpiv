@@ -10,11 +10,11 @@ function states.cutscene.load(self)
       {placetext='level 2'},
       {place='level3.rle'},
       {placetext='level 3'},
-      {person='alita.rle'},
+      {person0='alitahugo.rle',},
       {persontext='i will save it!'},
-      {person='hugo.rle'},
+      {person1='alitahugo.rle'},
       {persontext='no, i will save it!'},
-      {person='infested.rle'},
+      {person1='mssinfested.rle'},
       {persontext='i will destroy it!'},
     },
   }
@@ -62,10 +62,12 @@ function states.cutscene.nextframe(self)
   self.frame += 1
   local frame = self.c[self.current][self.frame]
   if frame then
-    if frame.place or frame.person then
+    if frame.place or frame.person0 or frame.person1 then
       self.fadein = 0
       self.place = frame.place or false
-      rle(images[frame.place or frame.person])
+      rle(
+        images[frame.place or frame.person0 or frame.person1],
+        frame.person0 and 0 or (frame.person1 and 1 or nil))
     end
   else
     changeState(previousState or states.menu)

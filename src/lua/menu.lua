@@ -39,28 +39,28 @@ function states.menu.load(self)
     {
       text = function() return "story" end,
       exec = function()
-        rle(images['hugo.rle'])
+        rle(images['alitahugo.rle'],1)
         self:changeMenu("story")
       end,
     },
     {
       text = function() return "options" end,
       exec = function()
-        rle(images['infested.rle'])
+        rle(images['mssinfested.rle'],1)
         self:changeMenu("options")
       end,
     },
     {
       text = function() return "music" end,
       exec = function()
-        rle(images['hugo.rle'])
+        rle(images['alitahugo.rle'],1)
         self:changeMenu("sound")
       end,
     },
     {
       text = function() return "credits" end,
       exec = function()
-        rle(images['alita.rle'])
+        rle(images['alitahugo.rle'],0)
         self:changeMenu("credits")
       end,
     },
@@ -69,7 +69,7 @@ function states.menu.load(self)
   local return_to_menu = {
     text = function() return "back" end,
     exec = function()
-      rle(images['alita.rle'])
+      rle(images['alitahugo.rle'],0)
       self:changeMenu("main")
     end,
   }
@@ -148,11 +148,11 @@ function states.menu.load(self)
   }
 
   self.m.credits = {
-    {text = function() return "#fc_jam & #awfuljams" end,},
+    {text = function() return "#fc_jam + #awfuljams" end,},
 	{text = function() return "git:v"..git_count.."["..git.."]" end,},
-    {text = function() return "code: @josefnpat" end,},
-    {text = function() return "art: @bytedesigning" end,},
-    {text = function() return "music/sfx: @johnplzplaybass" end,},
+    {text = function() return "code: josefnpat" end,},
+    {text = function() return "art: bytedesigning" end,},
+    {text = function() return "music/sfx: johnplzplaybass" end,},
     return_to_menu,
   }
 
@@ -164,8 +164,9 @@ function states.menu.enter(self)
   self.cur = 1
   self.fadeout = nil
   self.fadein = 100
-  rle(images['alita.rle'])
+  rle(images['alitahugo.rle'],0)
   self.music_level = 1
+  music(musicdata.menu)
 end
 
 function states.menu.draw(self)
