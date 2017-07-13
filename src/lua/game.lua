@@ -59,6 +59,8 @@ function states.game.enter(self)
   self.player.x = 64
   self.player.y = 96
   self.player.shield = self.player.upgrades.shield
+  self.player.cloak = 0
+  self.player.cloak_reload = 0
 
   for x = 0,127 do
     for y = 0,127 do
@@ -102,7 +104,8 @@ function intersect(a,b,range)
 end
 
 function states.game.damage(self)
-  if self.player.shield == 0 then
+  if self.player.cloak > 0 then
+  elseif self.player.shield == 0 then
     self.gameover = self.gameover or 100
   else
     self.player.shield -= 1
@@ -308,7 +311,7 @@ function states.game.update(self)
   self.player.cloak_reload = max(0,self.player.cloak_reload-1)
   self.player.cloak = max(0,self.player.cloak-1)
   if self.player.cloak_reload == 0 and btn(5) then
-    self.player.cloak_reload = 360
+    self.player.cloak_reload = 60*5-self.player.upgrades.cloak*60
     self.player.cloak = 60
   end
 
@@ -367,15 +370,15 @@ function states.game.draw(self)
     spr(ss.player[1],self.player.x-8,self.player.y-8,2,2)
   end
   if self.player.cloak_reload == 0 then
-    spr(ss.ui.cloak[1],0,120)
+    spr(ss.ui.cloak[2],4,116)
   else
-    spr(ss.ui.cloak[2],0,120)
+    spr(ss.ui.cloak[1],4,116)
   end
   for i = 1,self.player.upgrades.shield do
     if self.player.shield < i then
-      spr(ss.ui.shield[1],i*8,120)
+      spr(ss.ui.shield[1],i*8+8,116)
     else
-      spr(ss.ui.shield[2],i*8,120)
+      spr(ss.ui.shield[2],i*8+8,116)
     end
   end
   palt()
