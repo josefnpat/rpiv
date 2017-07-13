@@ -76,6 +76,9 @@ function states.game.enter(self)
     add(self.enemies_stack,enemy_boss(1))
     add(self.enemies_stack,enemy_large())
     add(self.enemies_stack,enemy_small())
+    add(self.enemies_stack,enemy_small())
+    add(self.enemies_stack,enemy_small())
+    add(self.enemies_stack,enemy_small())
   elseif self.level == 2 then
     add(self.enemies_stack,enemy_boss(2))
   else--if self.level == 3 then
@@ -126,6 +129,15 @@ function enemy_small()
       sprite = ss.enemy.small[flr(rnd(#ss.enemy.small))+1],
       offset = 4,
       size = 1,
+      death = function(self)
+        sfx(sfxdata.explosion)
+        local explosion = {
+          x = self.x,
+          y = self.y,
+          time = 30,
+        }
+        add(states.game.explosions,explosion)
+      end,
       update = function(self)
         self.y += 2
         self.reload = max(0,self.reload-1)
@@ -154,7 +166,16 @@ function enemy_large()
       sprite = ss.enemy.large[flr(rnd(#ss.enemy.large))+1],
       offset = 8,
       size = 2,
-      draw = function(enemy)
+      death = function(self)
+        sfx(sfxdata.explosion)
+        for _,v in pairs({{-1,-1},{-1,1},{1,-1},{1,1},{0,0}}) do
+          local explosion = {
+            x = self.x+v[1]*8,
+            y = self.y+v[2]*8,
+            time = 30,
+          }
+          add(states.game.explosions,explosion)
+        end
       end,
       update = function(self)
         self.y += 1
@@ -187,7 +208,19 @@ function enemy_boss(n)
       sprite = ss.enemy.boss[n],
       offset = offset[n],
       size = size[n],
-      draw = function(enemy)
+      spawn = function(self)
+        music(musicdata.boss[n])
+      end,
+      death = function(self)
+        sfx(sfxdata.bigexplosion)
+        for _,v in pairs({{-1,-1},{-1,1},{1,-1},{1,1},{0,0}}) do
+          local explosion = {
+            x = self.x+v[1]*12,
+            y = self.y+v[2]*12,
+            time = 30,
+          }
+          add(states.game.explosions,explosion)
+        end
       end,
       update = function(self)
         self.y = min(self.y + 1,32)
@@ -231,6 +264,9 @@ function states.game.update(self)
     if enemy then
       del(self.enemies_stack,enemy)
       add(self.enemies,enemy)
+      if enemy.type.spawn then
+        enemy.type.spawn(enemy)
+      end
     end
   end
 
@@ -262,15 +298,9 @@ function states.game.update(self)
     end
     for _,enemy in pairs(self.enemies) do
       if intersect(enemy,bullet,4) then
-        sfx(sfxdata.explosion)
+        enemy.type.death(enemy)
         del(self.enemies,enemy)
         del(self.bullets,bullet)
-        local explosion = {
-          x = bullet.x,
-          y = bullet.y,
-          time = 30,
-        }
-        add(self.explosions,explosion)
       end
     end
   end

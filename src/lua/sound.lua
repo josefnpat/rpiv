@@ -22,7 +22,7 @@ musicdata.boss[3] = 6
 
 -- SFX for the game
 sfxdata.explosion = 50
-sfxdata.bigexplosion = 51 -- todo: boss
+sfxdata.bigexplosion = 51
 sfxdata.playerdeath = 53
 sfxdata.menuscroll = 54
 sfxdata.weapon = 55
