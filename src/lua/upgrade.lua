@@ -89,7 +89,7 @@ function states.upgrade.update(self)
     pallight(self.fadeout)
     if self.fadeout == 0 then
       self.fadeout = nil
-      changeState(states.cutscene)
+      changeState(states.game)
     end
   end
 end
