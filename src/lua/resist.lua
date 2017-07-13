@@ -19,8 +19,10 @@ function states.resist.update(self)
   if not self.fadein and not self.fadeout then
     if btnp(4) or btnp(5) then
       self.fadeout = 100
+      sfx(sfxdata.pushstart)
     end
     if btnp(0) or btnp(1) or btnp(2) or btnp(3) then
+      sfx(sfxdata.menuscroll)
       self.continue = not self.continue
     end
   end

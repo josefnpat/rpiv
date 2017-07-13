@@ -105,8 +105,12 @@ end
 
 function states.game.damage(self)
   if self.player.cloak > 0 then
+    return
   elseif self.player.shield == 0 then
-    self.gameover = self.gameover or 100
+    if not self.gameover then
+      sfx(sfxdata.playerdeath)
+      self.gameover = 100
+    end
   else
     self.player.shield -= 1
   end
@@ -258,6 +262,7 @@ function states.game.update(self)
     end
     for _,enemy in pairs(self.enemies) do
       if intersect(enemy,bullet,4) then
+        sfx(sfxdata.explosion)
         del(self.enemies,enemy)
         del(self.bullets,bullet)
         local explosion = {
@@ -300,6 +305,7 @@ function states.game.update(self)
 
   self.player.bullets_reload = max(0,self.player.bullets_reload-1)
   if self.player.bullets_reload == 0 and btn(4) then
+    sfx(sfxdata.weapon)
     self.player.bullets_reload = 6-self.player.upgrades.fire
     local bullet = {
       x = self.player.x,
@@ -311,6 +317,7 @@ function states.game.update(self)
   self.player.cloak_reload = max(0,self.player.cloak_reload-1)
   self.player.cloak = max(0,self.player.cloak-1)
   if self.player.cloak_reload == 0 and btn(5) then
+    sfx(sfxdata.cloaking)
     self.player.cloak_reload = 60*5-self.player.upgrades.cloak*60
     self.player.cloak = 60
   end

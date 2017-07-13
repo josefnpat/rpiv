@@ -224,8 +224,10 @@ function states.menu.update(self)
   if not self.fadeout then
     if btnp(2) then
       self.cur -= 1
+      sfx(sfxdata.menuscroll)
     elseif btnp(3) then
       self.cur += 1
+      sfx(sfxdata.menuscroll)
     end
     if self.cur == 0 then
       self.cur = #self.curm
@@ -237,8 +239,10 @@ function states.menu.update(self)
 
   if btnp(4) or btn(5) then
     if self.curm[self.cur].exec and not self.fadeout and not self.fadein then
+      sfx(sfxdata.pushstart)
       self.fadeout = 0
     elseif self.curm[self.cur].qexec then
+      sfx(sfxdata.pushstart)
       self.curm[self.cur].qexec()
     end
   end

@@ -53,15 +53,19 @@ function states.upgrade.update(self)
   if not self.fadein and not self.fadeout then
     if btnp(0) then
       self.selected -= 1
+      sfx(sfxdata.menuscroll)
     end
     if btnp(1) then
       self.selected += 1
+      sfx(sfxdata.menuscroll)
     end
     if btnp(2) then
       self.selected += 2
+      sfx(sfxdata.menuscroll)
     end
     if btnp(3) then
       self.selected -= 2
+      sfx(sfxdata.menuscroll)
     end
     if self.selected > 4 then
       self.selected -= 4
@@ -69,6 +73,7 @@ function states.upgrade.update(self)
       self.selected += 4
     end
     if not self.fadeout and (btnp(4) or btnp(5)) then
+      sfx(sfxdata.upgrade)
       self:incup()
       self.fadeout = 100
     end
