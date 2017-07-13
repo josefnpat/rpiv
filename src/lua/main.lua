@@ -22,7 +22,7 @@ function _init()
     end
   end
 
-  changeState(states.splash)
+  changeState(states.menu)
 
 end
 

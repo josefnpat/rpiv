@@ -43,7 +43,6 @@ function states.menu.load(self)
       exec = function()
         states.game:init()
         states.cutscene.current = 1
-        states.cutscene.nextState = states.game
         changeState(states.cutscene)
       end,
     },
@@ -90,6 +89,7 @@ function states.menu.load(self)
       text = function() return "level 1" end,
       exec = function()
         states.cutscene.current = 1
+        nextState = states.menu
         changeState(states.cutscene)
       end
     },
@@ -97,6 +97,7 @@ function states.menu.load(self)
       text = function() return "level 2 (locked)" end,
       exec = function()
         states.cutscene.current = 2
+        nextState = states.menu
         changeState(states.cutscene)
       end
     },
@@ -104,6 +105,7 @@ function states.menu.load(self)
       text = function() return "level 3 (locked)" end,
       exec = function()
         states.cutscene.current = 3
+        nextState = states.menu
         changeState(states.cutscene)
       end
     },
@@ -111,6 +113,7 @@ function states.menu.load(self)
       text = function() return "ending (locked)" end,
       exec = function()
         states.cutscene.current = 4
+        nextState = states.menu
         changeState(states.cutscene)
       end
     },
@@ -125,10 +128,6 @@ function states.menu.load(self)
   }
 
   self.m.sound = {
-    {
-      text = function() return "play weapon sfx" end,
-      qexec = function() sfx(sfxdata.weapon) end,--,musicdata.sfx_channel) end,
-    },
     {
       text = function() return "level ["..self.music_level.."]" end,
       qexec = function() self.music_level = self.music_level%4+1 end,

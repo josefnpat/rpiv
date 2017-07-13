@@ -22,14 +22,12 @@ function states.cutscene.load(self)
 end
 
 function states.cutscene.enter(self)
-  self.current = self.current or 1
   self.frame = 0
   self:nextframe()
   music(musicdata.cutscene[self.current])
-  self.skip = false
-  menuitem(1,"skip cutscece",function()
-    self.skip = true
-    self:nextframe()
+  menuitem(1,"skip cutscene",function()
+    self.frame = #self.c[self.current]
+    self.fadein = 100
   end)
 end
 
@@ -53,7 +51,7 @@ end
 function states.cutscene.update(self)
   self.textlen += 1
   if self.fadein then
-    self.fadein += 4
+    self.fadein = min(100,self.fadein + 4)
     if self.fadein >= 100 then
       self.fadein = nil
       self:nextframe()
@@ -68,10 +66,15 @@ function states.cutscene.nextframe(self)
   self.textlen = 0
   self.frame += 1
   local frame = self.c[self.current][self.frame]
-  if not frame or self.skip then
-    changeState(self.nextState or states.menu)
+  if not frame then
+    if nextState then
+      changeState(nextState)
+    elseif self.current == 4 then
+      changeState(states.menu)
+    else
+      changeState(states.game)
+    end
     menuitem(1)
-    self.nextState = nil
   else
     if frame.place or frame.person0 or frame.person1 then
       self.fadein = 0
