@@ -121,6 +121,7 @@ end
 
 function enemy_small()
   return {
+    hp = 1,
     x = flr(rnd(120))+4,
     y = -8,
     reload = 0,
@@ -158,6 +159,7 @@ end
 
 function enemy_large()
   return {
+    hp = 4,
     x = flr(rnd(120))+4,
     y = -16,
     reload = 0,
@@ -201,6 +203,7 @@ function enemy_boss(n)
   local offset = {12,16,24}
   local size = {3,4,6}
   return {
+    hp = offset[n],
     x = 63,
     y = -128,
     reload = 0,
@@ -297,9 +300,19 @@ function states.game.update(self)
       del(self.player.bullets,bullet)
     end
     for _,enemy in pairs(self.enemies) do
-      if intersect(enemy,bullet,4) then
-        enemy.type.death(enemy)
-        del(self.enemies,enemy)
+      if intersect(enemy,bullet,enemy.type.size*4) then
+        if enemy.hp > 1 then
+          enemy.hp -= 1
+          local explosion = {
+            x = bullet.x,
+            y = bullet.y,
+            time = 30,
+          }
+          add(self.explosions,explosion)
+        else
+          del(self.enemies,enemy)
+          enemy.type.death(enemy)
+        end
         del(self.bullets,bullet)
       end
     end
