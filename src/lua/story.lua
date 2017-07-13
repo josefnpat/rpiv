@@ -5,7 +5,7 @@ story = {
     {persontext="i'm hit! i'm going down!"},
 
     {place='level1'},
-    {placetext="hugo said it couldn't happen ..."},
+    {placetext="hugo said it couldn't happen..."},
 
     {person1='alitahugo'},
     {persontext="alita - get out of here!"},
@@ -15,7 +15,7 @@ story = {
     {persontext="don't leave me behind!"},
 
     {person1='alitahugo'},
-    {persontext="don't worry ... i'll be up ahead"},
+    {persontext="don't worry... i'll be up ahead"},
     {persontext="come find me."},
 
     {place='level2'},
@@ -43,7 +43,7 @@ story = {
     {place='level2'},
     {placetext="there must be an evil inside us"},
     {placetext="an evil that feeds on fear."},
-    {placetext="today there's something ..."},
+    {placetext="today there's something..."},
     {placetext="something worth dying for."},
   },
   -- level 2 [3]
@@ -67,7 +67,7 @@ story = {
     {persontext="a l i t a . . ."},
 
     {person0='alitahugo'},
-    {persontext="how ..."},
+    {persontext="how..."},
     {persontext="how do you know my name?"},
 
     {person1='mssinfested'},
@@ -88,11 +88,11 @@ story = {
     {persontext="never!"},
 
     {place='level3'},
-    {placetext="so many lives ..."},
+    {placetext="so many lives..."},
     {placetext="pointlessly lost in our war."},
     {placetext="i may be one as well..."},
     {placetext="but it doesn't matter."},
-    {placetext="without hugo ..."},
+    {placetext="without hugo..."},
     {placetext="..."},
 
     {person0='alitahugo'},
@@ -102,9 +102,9 @@ story = {
   {
     {place='level3'},
     {placetext="i was shaking with tears of joy"},
-    {placetext="the mothership has been ..."},
+    {placetext="the mothership has been..."},
     {placetext="destroyed."},
-    {placetext="amongst the debris ..."},
+    {placetext="amongst the debris..."},
     {placetext="i found the infested monster."},
 
     {person0='alitahugo'},
