@@ -349,16 +349,16 @@ function states.game.update(self)
   end
 
   if btn(0) then
-    self.player.x -= (self.player.upgrades.speed*0.5+1)
+    self.player.x -= (self.player.upgrades.speed*0.5+1.5)
   end
   if btn(1) then
-    self.player.x += (self.player.upgrades.speed*0.5+1)
+    self.player.x += (self.player.upgrades.speed*0.5+1.5)
   end
   if btn(2) then
-    self.player.y -= (self.player.upgrades.speed*0.5+1)
+    self.player.y -= (self.player.upgrades.speed*0.5+1.5)
   end
   if btn(3) then
-    self.player.y += (self.player.upgrades.speed*0.5+1)
+    self.player.y += (self.player.upgrades.speed*0.5+1.5)
   end
 
   if self.gameover then
