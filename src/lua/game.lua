@@ -102,7 +102,7 @@ function states.game.enter(self)
     end
   end
 
-  self.enemy_spawn = 0
+  self.enemy_spawn = 120
 
   self.explosions = {}
   self.bullets = {}
