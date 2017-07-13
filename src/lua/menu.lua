@@ -41,7 +41,10 @@ function states.menu.load(self)
     {
       text = function() return "new game" end,
       exec = function()
-        changeState(states.game)
+        states.game:init()
+        states.cutscene.current = 1
+        states.cutscene.nextState = states.game
+        changeState(states.cutscene)
       end,
     },
     {

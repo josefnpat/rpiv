@@ -26,6 +26,11 @@ function states.cutscene.enter(self)
   self.frame = 0
   self:nextframe()
   music(musicdata.cutscene[self.current])
+  self.skip = false
+  menuitem(1,"skip cutscece",function()
+    self.skip = true
+    self:nextframe()
+  end)
 end
 
 function states.cutscene.draw(self)
@@ -63,7 +68,11 @@ function states.cutscene.nextframe(self)
   self.textlen = 0
   self.frame += 1
   local frame = self.c[self.current][self.frame]
-  if frame then
+  if not frame or self.skip then
+    changeState(self.nextState or states.menu)
+    menuitem(1)
+    self.nextState = nil
+  else
     if frame.place or frame.person0 or frame.person1 then
       self.fadein = 0
       self.place = frame.place or false
@@ -71,7 +80,5 @@ function states.cutscene.nextframe(self)
         frame.place or frame.person0 or frame.person1,
         frame.person0 and 0 or (frame.person1 and 1 or nil))
     end
-  else
-    changeState(previousState or states.menu)
   end
 end

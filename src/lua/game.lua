@@ -1,14 +1,6 @@
 states.game = {}
 
-function states.game.enter(self)
-
-  music()
-
-  for x = 0,127 do
-    for y = 0,127 do
-      sset(x,y,spr_orig[x][y])
-    end
-  end
+function states.game.init(self)
 
   self.player = {
     x = 64,
@@ -26,14 +18,31 @@ function states.game.enter(self)
     },
   }
 
+  self.level = 1
+
+end
+
+function states.game.enter(self)
+
+  music()
+
+  self.player.x = 64
+  self.player.y = 96
+  self.player.shield = self.player.upgrades.shield
+
+  for x = 0,127 do
+    for y = 0,127 do
+      sset(x,y,spr_orig[x][y])
+    end
+  end
+
+
   self.enemies = {}
   self.enemy_spawn = 0
 
   self.explosions = {}
   self.bullets = {}
   self.bgoffset = 0
-
-  self.level = 1
 
   self.gameover = nil
   self.fadein = 0
