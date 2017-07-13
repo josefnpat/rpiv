@@ -1,18 +1,52 @@
 states.upgrade = {}
 
+function states.upgrade.load(self)
+  self.m = {
+    {x=20,y=20,name="fire",exec=function() end,},
+    {x=84,y=20,name="speed",exec=function() end,},
+    {x=20,y=84,name="shield",exec=function() end,},
+    {x=84,y=84,name="cloak",exec=function() end,},
+  }
+end
+
 function states.upgrade.enter(self)
   self.fadein = 0
   self.fadeout = nil
+  self.selected = 1
 end
 
 function states.upgrade.draw(self)
   cls()
-  print"this is upgradez"
+  for i,v in pairs(self.m) do
+    if i == self.selected then
+      rect(v.x-2,v.y-2,v.x+24+2,v.y+24+2)
+    end
+    rect(v.x,v.y,v.x+24,v.y+24)
+  end
 end
 
 function states.upgrade.update(self)
   if not self.fadein and not self.fadeout then
-    self.fadeout = 100
+    if btnp(0) then
+      self.selected -= 1
+    end
+    if btnp(1) then
+      self.selected += 1
+    end
+    if btnp(2) then
+      self.selected += 2
+    end
+    if btnp(3) then
+      self.selected -= 2
+    end
+    if self.selected > 4 then
+      self.selected -= 4
+    elseif self.selected < 1 then
+      self.selected += 4
+    end
+    if btnp(4) or btnp(5) then
+      self.fadeout = 100
+    end
   end
   if self.fadein then
     self.fadein = min(100,self.fadein + 4)

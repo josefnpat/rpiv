@@ -22,7 +22,7 @@ function _init()
     end
   end
 
-  changeState(states.resist)
+  changeState(states.splash)
 
 end
 
