@@ -1,11 +1,5 @@
 function load_ss(image,index)
 
-  if __last_loaded_image == image and __last_loaded_image_index == index then
-    return
-  end
-  __last_loaded_image = image
-  __last_loaded_image_index = index
-
   local map = {
     [0] = 0,
     [1] = 3,

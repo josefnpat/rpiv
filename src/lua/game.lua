@@ -1,37 +1,44 @@
 states.game = {}
 
-function states.game.enter()
+function states.game.enter(self)
 
   music()
 
   for x = 0,127 do
     for y = 0,127 do
-	  sset(x,y,spr_orig[x][y])
+      sset(x,y,spr_orig[x][y])
     end
   end
 
-  player = {
+  self.player = {
     x = 64,
     y = 96,
     bullets = {},
     bullets_reload = 0,
     cloak = 0,
     cloak_reload = 0,
-    shield = 1,
+    shield = 3,
     upgrades = {
-      fire = 0,
-      speed = 0,
-      shield = 2,
-      cloak = 0,
+      fire = 3,
+      speed = 3,
+      shield = 3,
+      cloak = 3,
     },
   }
 
-  enemies = {}
-  enemy_spawn = 0
+  self.enemies = {}
+  self.enemy_spawn = 0
 
-  explosions = {}
-  bullets = {}
-  bgoffset = 0
+  self.explosions = {}
+  self.bullets = {}
+  self.bgoffset = 0
+
+  self.level = 1
+
+  self.gameover = nil
+  self.fadein = 0
+  pallight(self.fadein)
+
 end
 
 function clamp(i,mini,maxi)
@@ -42,21 +49,29 @@ function intersect(a,b,range)
   return abs(a.x - b.x) < range and abs(a.y - b.y) < range
 end
 
-function damage()
-  if player.shield == 0 then
-    -- gameover
+function states.game.damage(self)
+  if self.player.shield == 0 then
+    self.gameover = 100
   else
-    player.shield -= 1
+    self.player.shield -= 1
   end
 end
 
-function states.game.update()
+function states.game.update(self)
 
-  bgoffset = (bgoffset + 1)%64
+  if self.fadein then
+    self.fadein = min(100,self.fadein + 4)
+    pallight(self.fadein)
+    if self.fadein >= 100 then
+      self.fadein = nil
+    end
+  end
 
-  enemy_spawn = max(0,enemy_spawn-1)
-  if enemy_spawn == 0 then
-    enemy_spawn = 15
+  self.bgoffset = (self.bgoffset + 1)%64
+
+  self.enemy_spawn = max(0,self.enemy_spawn-1)
+  if self.enemy_spawn == 0 then
+    self.enemy_spawn = 15
     local enemy = {
       x = rnd(127),
       y = 0,
@@ -69,118 +84,127 @@ function states.game.update()
           self.reload = max(0,self.reload-1)
           self.direction = self.x < 4 and 1 or (self.x > 124 and -1 or self.direction)
           self.x += self.direction
-          if self.reload == 0 then
+          if self.reload <= 0 then
             self.reload = 30
             local bullet = {
               x = self.x,
               y = self.y,
             }
-            add(bullets,bullet)
+            add(states.game.bullets,bullet)
           end
         end,
       }
     }
-    add(enemies,enemy)
+    add(self.enemies,enemy)
   end
 
-  for _,enemy in pairs(enemies) do
+  for _,enemy in pairs(self.enemies) do
     enemy.type.update(enemy)
     enemy.y += 1
     if enemy.y > 128 then
-      del(enemies,enemy)
+      del(self.enemies,enemy)
     end
-    if intersect(enemy,player,4) then
-      del(enemies,enemy)
-      damage()
+    if intersect(enemy,self.player,4) then
+      del(self.enemies,enemy)
+      self:damage()
     end
   end
 
-  for _,bullet in pairs(bullets) do
+  for _,bullet in pairs(self.bullets) do
     bullet.y += 2
     if bullet.y > 128 then
-      del(bullets,bullet)
-    elseif intersect(bullet,player,4) then
-      damage()
-      del(bullets,bullet)
+      del(self.bullets,bullet)
+    elseif intersect(bullet,self.player,4) then
+      self:damage()
+      del(self.bullets,bullet)
     end
   end
 
-  for _,bullet in pairs(player.bullets) do
+  for _,bullet in pairs(self.player.bullets) do
     bullet.y -= 4
     if bullet.y < 0 then
-      del(player.bullets,bullet)
+      del(self.player.bullets,bullet)
     end
-    for _,enemy in pairs(enemies) do
+    for _,enemy in pairs(self.enemies) do
       if intersect(enemy,bullet,4) then
-        del(enemies,enemy)
-        del(bullets,bullet)
+        del(self.enemies,enemy)
+        del(self.bullets,bullet)
         local explosion = {
           x = bullet.x,
           y = bullet.y,
           time = 30,
         }
-        add(explosions,explosion)
+        add(self.explosions,explosion)
       end
     end
   end
 
-  for _,explosion in pairs(explosions) do
+  for _,explosion in pairs(self.explosions) do
     explosion.time = max(0,explosion.time-1)
     if explosion.time == 0 then
-      del(explosions,explosion)
+      del(self.explosions,explosion)
     end
   end
 
   if btn(0) then
-    player.x -= 1
+    self.player.x -= self.player.upgrades.speed
   end
   if btn(1) then
-    player.x += 1
+    self.player.x += self.player.upgrades.speed
   end
   if btn(2) then
-    player.y -= 1
+    self.player.y -= self.player.upgrades.speed
   end
   if btn(3) then
-    player.y += 1
+    self.player.y += self.player.upgrades.speed
   end
 
-  player.x = clamp(player.x,4,124)
-  player.y = clamp(player.y,4,128)
+  self.player.x = clamp(self.player.x,4,124)
+  self.player.y = clamp(self.player.y,4,124)
 
-  player.bullets_reload = max(0,player.bullets_reload-1)
-  if player.bullets_reload == 0 and btn(4) then
-    player.bullets_reload = 2
+  self.player.bullets_reload = max(0,self.player.bullets_reload-1)
+  if self.player.bullets_reload == 0 and btn(4) then
+    self.player.bullets_reload = 6-self.player.upgrades.fire
     local bullet = {
-      x = player.x,
-      y = player.y,
+      x = self.player.x,
+      y = self.player.y,
     }
-    add(player.bullets,bullet)
+    add(self.player.bullets,bullet)
   end
 
-  player.cloak_reload = max(0,player.cloak_reload-1)
-  player.cloak = max(0,player.cloak-1)
-  if player.cloak_reload == 0 and btn(5) then
-    player.cloak_reload = 360
-    player.cloak = 60
+  self.player.cloak_reload = max(0,self.player.cloak_reload-1)
+  self.player.cloak = max(0,self.player.cloak-1)
+  if self.player.cloak_reload == 0 and btn(5) then
+    self.player.cloak_reload = 360
+    self.player.cloak = 60
+  end
+
+  if self.gameover then
+    self.gameover = max(0,self.gameover - 4)
+    pallight(self.gameover)
+    if self.gameover == 0 then
+      self.gameover = nil
+      changeState(states.resist)
+    end
   end
 
 end
 
-function states.game.draw()
+function states.game.draw(self)
   cls()
-  spr(128,0,-64+bgoffset,16,8)
-  spr(128,0,0+bgoffset,16,8)
-  spr(128,0,64+bgoffset,16,8)
-  for _,bullet in pairs(bullets) do
+  --spr(128,0,-64+self.bgoffset,16,8)
+  --spr(128,0,0+self.bgoffset,16,8)
+  --spr(128,0,64+self.bgoffset,16,8)
+  for _,bullet in pairs(self.bullets) do
     spr(4,bullet.x-4,bullet.y-4)
   end
-  for _,bullet in pairs(player.bullets) do
+  for _,bullet in pairs(self.player.bullets) do
     spr(4,bullet.x-4,bullet.y-4)
   end
-  for _,enemy in pairs(enemies) do
+  for _,enemy in pairs(self.enemies) do
     spr(enemy.type.sprite,enemy.x-enemy.type.offset,enemy.y-enemy.type.offset)
   end
-  for _,explosion in pairs(explosions) do
+  for _,explosion in pairs(self.explosions) do
     local sprite = 12
     if explosion.time > 20 then
       sprite = 10
@@ -189,18 +213,18 @@ function states.game.draw()
     end
     spr(sprite,explosion.x-4,explosion.y-4)
   end
-  if player.cloak > 0 then
-    spr(2,player.x-8,player.y-8,2,2)
+  if self.player.cloak > 0 then
+    spr(2,self.player.x-8,self.player.y-8,2,2)
   else
-    spr(0,player.x-8,player.y-8,2,2)
+    spr(0,self.player.x-8,self.player.y-8,2,2)
   end
-  if player.cloak_reload == 0 then
+  if self.player.cloak_reload == 0 then
     spr(9,0,120)
   else
     spr(8,0,120)
   end
-  for i = 1,player.upgrades.shield do
-    if player.shield < i then
+  for i = 1,self.player.upgrades.shield do
+    if self.player.shield < i then
       spr(6,i*8,120)
     else
       spr(7,i*8,120)
