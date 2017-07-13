@@ -84,10 +84,15 @@ function states.menu.load(self)
     end,
   }
 
+  local ls = " (locked)"
+
   self.m.story = {
     {
-      text = function() return "level 1" end,
+      text = function()
+        return "level 1"..(unlocked[1] and "" or ls)
+      end,
       exec = function()
+        if not unlocked[1] then return end
         states.cutscene.current = 1
         nextState = states.menu
         changeState(states.cutscene)
@@ -95,23 +100,33 @@ function states.menu.load(self)
     },
     {
       text = function() return "level 2 (locked)" end,
+      text = function()
+        return "level 2"..(unlocked[2] and "" or ls)
+      end,
       exec = function()
+        if not unlocked[2] then return end
         states.cutscene.current = 2
         nextState = states.menu
         changeState(states.cutscene)
       end
     },
     {
-      text = function() return "level 3 (locked)" end,
+      text = function()
+        return "level 3"..(unlocked[3] and "" or ls)
+      end,
       exec = function()
+        if not unlocked[3] then return end
         states.cutscene.current = 3
         nextState = states.menu
         changeState(states.cutscene)
       end
     },
     {
-      text = function() return "ending (locked)" end,
+      text = function()
+        return "ending"..(unlocked[4] and "" or ls)
+      end,
       exec = function()
+        if not unlocked[4] then return end
         states.cutscene.current = 4
         nextState = states.menu
         changeState(states.cutscene)
@@ -187,6 +202,7 @@ function states.menu.load(self)
     "insert subtitle here",
   }
   self.title = "r e d  p l a n e t  i v"
+  unlocked = {}
 end
 
 function states.menu.enter(self)

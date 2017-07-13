@@ -29,6 +29,7 @@ function states.cutscene.enter(self)
     self.frame = #self.c[self.current]
     self.fadein = 100
   end)
+  unlocked[self.current] = true
 end
 
 function states.cutscene.draw(self)
