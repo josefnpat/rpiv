@@ -120,9 +120,12 @@ function states.menu.load(self)
     return_to_menu,
   }
 
+  self.diff_joke = "difficulty: hard"
+
   self.m.options = {
     {
-      text = function() return "difficulty" end,
+      text = function() return self.diff_joke end,
+      exec = function() self.diff_joke = "difficulty: still hard" end,
     },
     return_to_menu,
   }
