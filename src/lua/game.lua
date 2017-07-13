@@ -61,6 +61,7 @@ function states.game.enter(self)
   self.player.shield = self.player.upgrades.shield
   self.player.cloak = 0
   self.player.cloak_reload = 0
+  self.player.bullets = {}
 
   for x = 0,127 do
     for y = 0,127 do
@@ -74,15 +75,31 @@ function states.game.enter(self)
   -- stack is backwards so i can use a[#a] as pop
   if self.level == 1 then
     add(self.enemies_stack,enemy_boss(1))
-    add(self.enemies_stack,enemy_large())
-    add(self.enemies_stack,enemy_small())
-    add(self.enemies_stack,enemy_small())
-    add(self.enemies_stack,enemy_small())
-    add(self.enemies_stack,enemy_small())
+    for i = 1,10 do
+      add(self.enemies_stack,enemy_large())
+      add(self.enemies_stack,enemy_small())
+      add(self.enemies_stack,enemy_small())
+      add(self.enemies_stack,enemy_small())
+      add(self.enemies_stack,enemy_small())
+    end
   elseif self.level == 2 then
     add(self.enemies_stack,enemy_boss(2))
+    for i = 1,15 do
+      add(self.enemies_stack,enemy_large())
+      add(self.enemies_stack,enemy_small())
+      add(self.enemies_stack,enemy_large())
+      add(self.enemies_stack,enemy_small())
+    end
   else--if self.level == 3 then
     add(self.enemies_stack,enemy_boss(3))
+    for i = 1,20 do
+      add(self.enemies_stack,enemy_large())
+      add(self.enemies_stack,enemy_small())
+      add(self.enemies_stack,enemy_large())
+      add(self.enemies_stack,enemy_small())
+      add(self.enemies_stack,enemy_large())
+      add(self.enemies_stack,enemy_small())
+    end
   end
 
   self.enemy_spawn = 0
@@ -203,10 +220,11 @@ function enemy_boss(n)
   local offset = {12,16,24}
   local size = {3,4,6}
   return {
-    hp = offset[n],
+    hp = offset[n]*10,
     x = 63,
     y = -128,
     reload = 0,
+    direction = flr(rnd(1))*2-1,
     type = {
       sprite = ss.enemy.boss[n],
       offset = offset[n],
@@ -227,6 +245,10 @@ function enemy_boss(n)
       end,
       update = function(self)
         self.y = min(self.y + 1,32)
+        self.direction = self.x < 16 and 1 or (self.x > 96 and -1 or self.direction)
+        if self.y == 32 then
+          self.x += self.direction*n
+        end
         self.reload = max(0,self.reload-1)
         if self.reload <= 0 then
           self.reload = 85 - n*15
@@ -262,7 +284,7 @@ function states.game.update(self)
 
   self.enemy_spawn = max(0,self.enemy_spawn-1)
   if self.enemy_spawn == 0 then
-    self.enemy_spawn = 15
+    self.enemy_spawn = 60-self.level*15
     local enemy = self.enemies_stack[#self.enemies_stack]
     if enemy then
       del(self.enemies_stack,enemy)
@@ -343,7 +365,7 @@ function states.game.update(self)
     self.player.y += 4
   else
     self.player.x = clamp(self.player.x,4,124)
-    self.player.y = clamp(self.player.y,4,124)
+    self.player.y = clamp(self.player.y,4+32,124)
   end
 
   self.player.bullets_reload = max(0,self.player.bullets_reload-1)
