@@ -143,7 +143,7 @@ function enemy_small()
     x = flr(rnd(120))+4,
     y = -8,
     reload = 0,
-    direction = flr(rnd(1))*2-1,
+    direction = flr(rnd(2))*2-1,
     type = {
       sprite = ss.enemy.small[flr(rnd(#ss.enemy.small))+1],
       offset = 4,
@@ -181,7 +181,7 @@ function enemy_large()
     x = flr(rnd(120))+4,
     y = -16,
     reload = 0,
-    direction = flr(rnd(1))*2-1,
+    direction = flr(rnd(2))*2-1,
     type = {
       sprite = ss.enemy.large[flr(rnd(#ss.enemy.large))+1],
       offset = 8,
@@ -225,7 +225,7 @@ function enemy_boss(n)
     x = 63,
     y = -128,
     reload = 0,
-    direction = flr(rnd(1))*2-1,
+    direction = flr(rnd(2))*2-1,
     type = {
       sprite = ss.enemy.boss[n],
       offset = offset[n],
