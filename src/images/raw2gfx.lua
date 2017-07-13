@@ -21,7 +21,10 @@ data = {}
 
 for line in io.lines(arg[1]) do
   -- 117,127: (65535,61937,59624)  #FFF1E8  srgb(255,241,232)
-  local rx,ry,_,_,_,hex,_ = string.match(line,'^(%d+),(%d+):%s+%((%d+),(%d+),(%d+)%)%s+#(%x+)%s+(.+)$')
+  --print(string.match(line,'^(%d+),(%d+):%s*%(%s*(%d+),%s*(%d+),%s'))
+  local rx,ry,_,_,_,hex,_ = string.match(line,'^(%d+),(%d+):%s+%(%s*(%d+),%s*(%d+),%s*(%d+)%)%s+#(%x+)%s+(.+)$')
+  --print(line)
+  --print("what:",rx,ry)
   mx,my = tonumber(rx)+1,tonumber(ry)+1
   assert(map[hex],'invalid color: '..hex)
   if not data[my] then
