@@ -35,7 +35,7 @@ function states.resist.update(self)
     pallight(self.fadeout)
     if self.fadeout == 0 then
       self.fadeout = nil
-      changeState(self.continue and states.game or states.menu)
+      changeState(self.continue and states.upgrade or states.menu)
     end
   end
 end
