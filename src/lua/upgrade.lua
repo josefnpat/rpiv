@@ -13,6 +13,13 @@ function states.upgrade.enter(self)
   self.fadein = 0
   self.fadeout = nil
   self.selected = 1
+
+  for x = 0,127 do
+    for y = 0,127 do
+      sset(x,y,spr_orig[x][y])
+    end
+  end
+
 end
 
 function states.upgrade.draw(self)
@@ -21,7 +28,7 @@ function states.upgrade.draw(self)
     if i == self.selected then
       rect(v.x-2,v.y-2,v.x+24+2,v.y+24+2)
     end
-    rect(v.x,v.y,v.x+24,v.y+24)
+    spr(ss.ui.upgrade[i],v.x,v.y,3,3)
   end
 end
 

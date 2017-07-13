@@ -36,7 +36,6 @@ function states.game.enter(self)
     end
   end
 
-
   self.enemies = {}
   self.enemy_spawn = 0
 
