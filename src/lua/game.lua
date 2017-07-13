@@ -134,6 +134,7 @@ function states.game.damage(self)
   else
     self.player.shield -= 1
   end
+  self.player.cloak = 60
 end
 
 function enemy_small()
