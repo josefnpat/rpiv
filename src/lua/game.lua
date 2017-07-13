@@ -20,6 +20,36 @@ function states.game.init(self)
 
   self.level = 1
 
+  self.level_bg = {
+    function()
+      for i = 0,1 do
+        spr(128,i*64,-64+self.bgoffset,8,8)
+        spr(128,i*64,0+self.bgoffset,8,8)
+        spr(128,i*64,64+self.bgoffset,8,8)
+      end
+    end,
+    function()
+      for i = 0,1 do
+        spr(136,i*64,-64+self.bgoffset,8,4)
+        spr(136,i*64,-32+self.bgoffset,8,4)
+        spr(136,i*64,0+self.bgoffset,8,4)
+        spr(136,i*64,32+self.bgoffset,8,4)
+        spr(136,i*64,64+self.bgoffset,8,4)
+        spr(136,i*64,96+self.bgoffset,8,4)
+      end
+    end,
+    function()
+      for i = 0,1 do
+        spr(200,i*64,-64+self.bgoffset,8,4,i==1)
+        spr(200,i*64,-32+self.bgoffset,8,4,i==1)
+        spr(200,i*64,0+self.bgoffset,8,4,i==1)
+        spr(200,i*64,32+self.bgoffset,8,4,i==1)
+        spr(200,i*64,64+self.bgoffset,8,4,i==1)
+        spr(200,i*64,96+self.bgoffset,8,4,i==1)
+      end
+    end
+  }
+
 end
 
 function states.game.enter(self)
@@ -86,7 +116,7 @@ function states.game.update(self)
       reload = 0,
       direction = flr(rnd(1))*2-1,
       type = {
-        sprite = 5,
+        sprite = ss.enemy.small[flr(rnd(#ss.enemy.small))+1],
         offset = 4,
         update = function(self)
           self.reload = max(0,self.reload-1)
@@ -200,42 +230,43 @@ end
 
 function states.game.draw(self)
   cls()
-  --spr(128,0,-64+self.bgoffset,16,8)
-  --spr(128,0,0+self.bgoffset,16,8)
-  --spr(128,0,64+self.bgoffset,16,8)
+  self.level_bg[self.level]()
+  palt(7,true)
+  palt(0,false)
   for _,bullet in pairs(self.bullets) do
-    spr(4,bullet.x-4,bullet.y-4)
+    spr(ss.enemy_bullet,bullet.x-4,bullet.y-4)
   end
   for _,bullet in pairs(self.player.bullets) do
-    spr(4,bullet.x-4,bullet.y-4)
+    spr(ss.player_bullet,bullet.x-4,bullet.y-4)
   end
   for _,enemy in pairs(self.enemies) do
     spr(enemy.type.sprite,enemy.x-enemy.type.offset,enemy.y-enemy.type.offset)
   end
   for _,explosion in pairs(self.explosions) do
-    local sprite = 12
+    local sprite = ss.explosion[3]
     if explosion.time > 20 then
-      sprite = 10
+      sprite = ss.explosion[2]
     elseif explosion.time > 10 then
-      sprite = 11
+      sprite = ss.explosion[1]
     end
     spr(sprite,explosion.x-4,explosion.y-4)
   end
   if self.player.cloak > 0 then
-    spr(2,self.player.x-8,self.player.y-8,2,2)
+    spr(ss.player[2],self.player.x-8,self.player.y-8,2,2)
   else
-    spr(0,self.player.x-8,self.player.y-8,2,2)
+    spr(ss.player[1],self.player.x-8,self.player.y-8,2,2)
   end
   if self.player.cloak_reload == 0 then
-    spr(9,0,120)
+    spr(ss.ui.cloak[1],0,120)
   else
-    spr(8,0,120)
+    spr(ss.ui.cloak[2],0,120)
   end
   for i = 1,self.player.upgrades.shield do
     if self.player.shield < i then
-      spr(6,i*8,120)
+      spr(ss.ui.shield[1],i*8,120)
     else
-      spr(7,i*8,120)
+      spr(ss.ui.shield[2],i*8,120)
     end
   end
+  palt()
 end
