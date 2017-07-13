@@ -138,7 +138,7 @@ end
 
 function enemy_small()
   return {
-    hp = 1,
+    hp = 2,
     x = flr(rnd(120))+4,
     y = -8,
     reload = 0,
@@ -176,7 +176,7 @@ end
 
 function enemy_large()
   return {
-    hp = 4,
+    hp = 8,
     x = flr(rnd(120))+4,
     y = -16,
     reload = 0,
@@ -220,7 +220,7 @@ function enemy_boss(n)
   local offset = {12,16,24}
   local size = {3,4,6}
   return {
-    hp = offset[n]*10,
+    hp = offset[n]*20,
     x = 63,
     y = -128,
     reload = 0,
