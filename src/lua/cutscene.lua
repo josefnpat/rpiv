@@ -67,7 +67,7 @@ function states.cutscene.nextframe(self)
   self.frame += 1
   local frame = self.c[self.current][self.frame]
   if not frame then
-    if nextState then
+    if nextState and nextState ~= states.cutscene then
       changeState(nextState)
     elseif self.current == 4 then
       changeState(states.menu)

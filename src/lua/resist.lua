@@ -36,7 +36,9 @@ function states.resist.update(self)
     if self.fadeout == 0 then
       self.fadeout = nil
       if self.continue then
-        changeState(sates.upgrade)
+        states.game.level = 1
+        states.cutscene.current = 1
+        changeState(states.upgrade)
       else
         nextState = nil
         changeState(states.menu)

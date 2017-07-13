@@ -2,10 +2,10 @@ states.upgrade = {}
 
 function states.upgrade.load(self)
   self.m = {
-    {x=20,y=20,name="fire",exec=function() end,},
-    {x=84,y=20,name="speed",exec=function() end,},
-    {x=20,y=84,name="shield",exec=function() end,},
-    {x=84,y=84,name="cloak",exec=function() end,},
+    {x=20,y=20,name="fire"},
+    {x=84,y=20,name="speed"},
+    {x=20,y=84,name="shield"},
+    {x=84,y=84,name="cloak"},
   }
 end
 
@@ -24,12 +24,29 @@ end
 
 function states.upgrade.draw(self)
   cls()
+  printc("choose an upgrade",0)
   for i,v in pairs(self.m) do
     if i == self.selected then
-      rect(v.x-2,v.y-2,v.x+24+2,v.y+24+2)
+      rect(v.x-2,v.y-2,v.x+25,v.y+25)
     end
     spr(ss.ui.upgrade[i],v.x,v.y,3,3)
+    print(self.m[i].name,v.x,v.y-8-1)
+    print(self:getup(i).."/3",v.x,v.y+24+3)
   end
+end
+
+function states.upgrade.getup(self,sel)
+  sel = sel or self.selected
+  return states.game.player.upgrades[self.m[sel].name]
+end
+
+function states.upgrade.setup(self,val,sel)
+  sel = sel or self.selected
+  states.game.player.upgrades[self.m[sel].name] = val
+end
+
+function states.upgrade.incup(self)
+  self:setup(min(3,self:getup()+1))
 end
 
 function states.upgrade.update(self)
@@ -51,7 +68,8 @@ function states.upgrade.update(self)
     elseif self.selected < 1 then
       self.selected += 4
     end
-    if btnp(4) or btnp(5) then
+    if not self.fadeout and (btnp(4) or btnp(5)) then
+      self:incup()
       self.fadeout = 100
     end
   end

@@ -11,10 +11,10 @@ function states.game.init(self)
     cloak_reload = 0,
     shield = 3,
     upgrades = {
-      fire = 3,
-      speed = 3,
-      shield = 3,
-      cloak = 3,
+      fire = 0,
+      speed = 0,
+      shield = 0,
+      cloak = 0,
     },
   }
 
@@ -103,7 +103,7 @@ end
 
 function states.game.damage(self)
   if self.player.shield == 0 then
-    self.gameover = 100
+    self.gameover = self.gameover or 100
   else
     self.player.shield -= 1
   end
@@ -275,20 +275,25 @@ function states.game.update(self)
   end
 
   if btn(0) then
-    self.player.x -= self.player.upgrades.speed
+    self.player.x -= (self.player.upgrades.speed*0.5+1)
   end
   if btn(1) then
-    self.player.x += self.player.upgrades.speed
+    self.player.x += (self.player.upgrades.speed*0.5+1)
   end
   if btn(2) then
-    self.player.y -= self.player.upgrades.speed
+    self.player.y -= (self.player.upgrades.speed*0.5+1)
   end
   if btn(3) then
-    self.player.y += self.player.upgrades.speed
+    self.player.y += (self.player.upgrades.speed*0.5+1)
   end
 
-  self.player.x = clamp(self.player.x,4,124)
-  self.player.y = clamp(self.player.y,4,124)
+  if self.gameover then
+    self.player.y += 4
+    self.player.y += 4
+  else
+    self.player.x = clamp(self.player.x,4,124)
+    self.player.y = clamp(self.player.y,4,124)
+  end
 
   self.player.bullets_reload = max(0,self.player.bullets_reload-1)
   if self.player.bullets_reload == 0 and btn(4) then
@@ -323,11 +328,7 @@ function states.game.update(self)
     if self.nextlevel == 0 then
       self.level += 1
       states.cutscene.current += 1
-      if self.level == 4 then
-        changeState(states.cutscene)
-      else
-        changeState(states.upgrade)
-      end
+      changeState(states.cutscene)
     end
   end
 
