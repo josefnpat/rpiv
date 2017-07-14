@@ -62,7 +62,7 @@ end
 
 function states.game.enter(self)
 
-  music()
+  music(musicdata.level[self.level])
 
   self.player.x = 64
   self.player.y = 96
