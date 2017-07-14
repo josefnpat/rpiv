@@ -25,16 +25,17 @@ end
 
 function states.upgrade.draw(self)
   cls()
-  printc("choose an upgrade",0)
+  printc("buy upgrade",0)
   for i,v in pairs(self.m) do
     if i == self.selected then
       rect(v.x-2,v.y-2,v.x+25,v.y+25)
     end
     spr(ss.ui.upgrade[i],v.x,v.y,3,3)
-    local name = self.m[i].name.."("..(self:getupcost(i) or "max")..")"
-    print(name,v.x,v.y-8-1)
-    print(self:getup(i).."/3",v.x,v.y+24+3)
+    local name = self.m[i].name.." $"..(self:getupcost(i) or "max")
+    printf(name,v.x,v.y-8-1,24)
+    printf(self:getup(i).."/3",v.x,v.y+24+3,24)
   end
+  printc("credits: $"..states.game.player.score,120)
 end
 
 function states.upgrade.getup(self,sel)
