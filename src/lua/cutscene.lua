@@ -59,7 +59,11 @@ function states.cutscene.update(self)
     end
   end
   if btnp(4) or btnp(5) then
-    self:nextframe()
+    if self.textlen <= 32 then
+      self.textlen = 32
+    else
+      self:nextframe()
+    end
   end
 end
 
