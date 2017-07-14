@@ -2,7 +2,15 @@ states.game = {}
 
 function states.game.init(self)
 
+  self.firing_pattern = {
+    [0] = {0},
+    [1] = {-1,1},
+    [2] = {-1,1},
+    [3] = {-2,0,2},
+  }
+
   self.player = {
+    score = 0,
     x = 64,
     y = 96,
     bullets = {},
@@ -149,6 +157,7 @@ function enemy_small()
       offset = 4,
       size = 1,
       death = function(self)
+        states.game.player.score += 5
         sfx(sfxdata.explosion)
         local explosion = {
           x = self.x,
@@ -187,6 +196,7 @@ function enemy_large()
       offset = 8,
       size = 2,
       death = function(self)
+        states.game.player.score += 20
         sfx(sfxdata.explosion)
         for _,v in pairs({{-1,-1},{-1,1},{1,-1},{1,1},{0,0}}) do
           local explosion = {
@@ -234,6 +244,7 @@ function enemy_boss(n)
         music(musicdata.boss[n])
       end,
       death = function(self)
+        states.game.player.score += 50*offset[n]
         sfx(sfxdata.bigexplosion)
         for _,v in pairs({{-1,-1},{-1,1},{1,-1},{1,1},{0,0}}) do
           local explosion = {
@@ -301,7 +312,7 @@ function states.game.update(self)
     if enemy.y > 128 then
       del(self.enemies,enemy)
     end
-    if intersect(enemy,self.player,4) then
+    if intersect(enemy,self.player,8) then
       del(self.enemies,enemy)
       self:damage()
     end
@@ -311,7 +322,7 @@ function states.game.update(self)
     bullet.y += 2
     if bullet.y > 128 then
       del(self.bullets,bullet)
-    elseif intersect(bullet,self.player,4) then
+    elseif intersect(bullet,self.player,8) then
       self:damage()
       del(self.bullets,bullet)
     end
@@ -349,16 +360,16 @@ function states.game.update(self)
   end
 
   if btn(0) then
-    self.player.x -= (self.player.upgrades.speed*0.5+1.5)
+    self.player.x -= (self.player.upgrades.speed/2+1.5)
   end
   if btn(1) then
-    self.player.x += (self.player.upgrades.speed*0.5+1.5)
+    self.player.x += (self.player.upgrades.speed/2+1.5)
   end
   if btn(2) then
-    self.player.y -= (self.player.upgrades.speed*0.5+1.5)
+    self.player.y -= (self.player.upgrades.speed/2+1.5)
   end
   if btn(3) then
-    self.player.y += (self.player.upgrades.speed*0.5+1.5)
+    self.player.y += (self.player.upgrades.speed/2+1.5)
   end
 
   if self.gameover then
@@ -372,12 +383,14 @@ function states.game.update(self)
   self.player.bullets_reload = max(0,self.player.bullets_reload-1)
   if self.player.bullets_reload == 0 and btn(4) then
     sfx(sfxdata.weapon)
-    self.player.bullets_reload = 6-self.player.upgrades.fire
-    local bullet = {
-      x = self.player.x,
-      y = self.player.y,
-    }
-    add(self.player.bullets,bullet)
+    self.player.bullets_reload = 8-self.player.upgrades.fire
+    for _,v in pairs(self.firing_pattern[self.player.upgrades.fire]) do
+      local bullet = {
+        x = self.player.x+v*4,
+        y = self.player.y,
+      }
+      add(self.player.bullets,bullet)
+    end
   end
 
   self.player.cloak_reload = max(0,self.player.cloak_reload-1)
@@ -455,4 +468,5 @@ function states.game.draw(self)
     end
   end
   palt()
+  printc(self.player.score.."",2)
 end

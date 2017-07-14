@@ -2,23 +2,23 @@ musicdata = {level={},boss={},cutscene={}}
 sfxdata = {}
 
 -- Music that plays in menu and upgrade screens
-musicdata.menu = 24
+musicdata.menu = 29
 
 -- Music that plays during cutscenes
-musicdata.cutscene[1] = 00 -- cutscene before level 1
-musicdata.cutscene[2] = 14 -- cutscene before level 2
-musicdata.cutscene[3] = 14 -- cutscene before level 3
-musicdata.cutscene[4] = 14 -- cutscene after level 3 (You won the game!)
+musicdata.cutscene[1] = 30 -- cutscene before level 1
+musicdata.cutscene[2] = 30 -- cutscene before level 2
+musicdata.cutscene[3] = 30 -- cutscene before level 3
+musicdata.cutscene[4] = 31 -- cutscene after level 3 (You won the game!)
 
 -- Music that plays during levels
-musicdata.level[1] = 0
-musicdata.level[2] = 14
-musicdata.level[3] = 14
+musicdata.level[1] = 31
+musicdata.level[2] = 00
+musicdata.level[3] = 19
 
 -- Music that plays during bossfights
-musicdata.boss[1] = 6
-musicdata.boss[2] = 6
-musicdata.boss[3] = 6
+musicdata.boss[1] = 54
+musicdata.boss[2] = 11
+musicdata.boss[3] = 48
 
 -- SFX for the game
 sfxdata.explosion = 50

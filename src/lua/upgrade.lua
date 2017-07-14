@@ -7,6 +7,7 @@ function states.upgrade.load(self)
     {x=20,y=84,name="shield"},
     {x=84,y=84,name="cloak"},
   }
+  self.cost = {100,500,1000}
 end
 
 function states.upgrade.enter(self)
@@ -30,7 +31,8 @@ function states.upgrade.draw(self)
       rect(v.x-2,v.y-2,v.x+25,v.y+25)
     end
     spr(ss.ui.upgrade[i],v.x,v.y,3,3)
-    print(self.m[i].name,v.x,v.y-8-1)
+    local name = self.m[i].name.."("..(self:getupcost(i) or "max")..")"
+    print(name,v.x,v.y-8-1)
     print(self:getup(i).."/3",v.x,v.y+24+3)
   end
 end
@@ -38,6 +40,12 @@ end
 function states.upgrade.getup(self,sel)
   sel = sel or self.selected
   return states.game.player.upgrades[self.m[sel].name]
+end
+
+function states.upgrade.getupcost(self,sel)
+  self = self or self.selected
+  local upl = self:getup(sel)+1
+  return self.cost[upl]
 end
 
 function states.upgrade.setup(self,val,sel)
@@ -72,10 +80,17 @@ function states.upgrade.update(self)
     elseif self.selected < 1 then
       self.selected += 4
     end
-    if not self.fadeout and (btnp(4) or btnp(5)) then
-      sfx(sfxdata.upgrade)
-      self:incup()
-      self.fadeout = 100
+    if not self.fadeout then
+      if btnp(4) or btnp(5) then
+        local upcost = self:getupcost(self.selected)
+        if upcost and upcost <= states.game.player.score then
+          states.game.player.score -= self:getupcost(self.selected)
+          sfx(sfxdata.upgrade)
+          self:incup()
+        else
+          self.fadeout = 100
+        end
+      end
     end
   end
   if self.fadein then
