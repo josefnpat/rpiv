@@ -316,7 +316,6 @@ function states.game.update(self)
       del(self.enemies,enemy)
     end
     if intersect(enemy,self.player,8) then
-      del(self.enemies,enemy)
       self:damage()
     end
   end
