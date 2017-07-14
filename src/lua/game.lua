@@ -29,31 +29,31 @@ function states.game.init(self)
   self.level = 1
 
   self.level_bg = {
-    function()
+    function(sx,sy)
       for i = 0,1 do
-        spr(128,i*64,-64+self.bgoffset,8,8)
-        spr(128,i*64,0+self.bgoffset,8,8)
-        spr(128,i*64,64+self.bgoffset,8,8)
+        spr(128,i*64+sx,-64+self.bgoffset+sy,8,8)
+        spr(128,i*64+sx,0+self.bgoffset+sy,8,8)
+        spr(128,i*64+sx,64+self.bgoffset+sy,8,8)
       end
     end,
-    function()
+    function(sx,sy)
       for i = 0,1 do
-        spr(136,i*64,-64+self.bgoffset,8,4)
-        spr(136,i*64,-32+self.bgoffset,8,4)
-        spr(136,i*64,0+self.bgoffset,8,4)
-        spr(136,i*64,32+self.bgoffset,8,4)
-        spr(136,i*64,64+self.bgoffset,8,4)
-        spr(136,i*64,96+self.bgoffset,8,4)
+        spr(136,i*64+sx,-64+self.bgoffset+sy,8,4)
+        spr(136,i*64+sx,-32+self.bgoffset+sy,8,4)
+        spr(136,i*64+sx,0+self.bgoffset+sy,8,4)
+        spr(136,i*64+sx,32+self.bgoffset+sy,8,4)
+        spr(136,i*64+sx,64+self.bgoffset+sy,8,4)
+        spr(136,i*64+sx,96+self.bgoffset+sy,8,4)
       end
     end,
-    function()
+    function(sx,sy)
       for i = 0,1 do
-        spr(200,i*64,-64+self.bgoffset,8,4,i==1)
-        spr(200,i*64,-32+self.bgoffset,8,4,i==1)
-        spr(200,i*64,0+self.bgoffset,8,4,i==1)
-        spr(200,i*64,32+self.bgoffset,8,4,i==1)
-        spr(200,i*64,64+self.bgoffset,8,4,i==1)
-        spr(200,i*64,96+self.bgoffset,8,4,i==1)
+        spr(200,i*64+sx,-64+self.bgoffset+sy,8,4,i==1)
+        spr(200,i*64+sx,-32+self.bgoffset+sy,8,4,i==1)
+        spr(200,i*64+sx,0+self.bgoffset+sy,8,4,i==1)
+        spr(200,i*64+sx,32+self.bgoffset+sy,8,4,i==1)
+        spr(200,i*64+sx,64+self.bgoffset+sy,8,4,i==1)
+        spr(200,i*64+sx,96+self.bgoffset+sy,8,4,i==1)
       end
     end
   }
@@ -115,7 +115,7 @@ function states.game.enter(self)
   self.explosions = {}
   self.bullets = {}
   self.bgoffset = 0
-
+  self.shakeinten = 0
   self.gameover = nil
   self.nextlevel = nil
   self.fadein = 0
@@ -142,6 +142,7 @@ function states.game.damage(self)
   else
     self.player.shield -= 1
   end
+  self.shakeinten = 30
   self.player.cloak = 60
 end
 
@@ -279,6 +280,8 @@ function enemy_boss(n)
 end
 
 function states.game.update(self)
+
+  self.shakeinten = max(0,self.shakeinten-1)
 
   if self.fadein then
     self.fadein = min(100,self.fadein + 4)
@@ -423,21 +426,25 @@ function states.game.update(self)
 
 end
 
+function states.game.s(self)--shake
+  return (flr(rnd(5))-2)*(self.shakeinten/10)
+end
+
 function states.game.draw(self)
   cls()
-  self.level_bg[self.level]()
+  self.level_bg[self.level](self:s(),self:s())
   palt(7,true)
   palt(0,false)
   for _,bullet in pairs(self.bullets) do
-    spr(ss.enemy_bullet,bullet.x-4,bullet.y-4)
+    spr(ss.enemy_bullet,bullet.x-4+self:s(),bullet.y-4+self:s())
   end
   for _,bullet in pairs(self.player.bullets) do
-    spr(ss.player_bullet,bullet.x-4,bullet.y-4)
+    spr(ss.player_bullet,bullet.x-4+self:s(),bullet.y-4+self:s())
   end
   for _,enemy in pairs(self.enemies) do
     spr(enemy.type.sprite,
-      enemy.x-enemy.type.offset,
-      enemy.y-enemy.type.offset,
+      enemy.x-enemy.type.offset+self:s(),
+      enemy.y-enemy.type.offset+self:s(),
       enemy.type.size,
       enemy.type.size)
   end
@@ -448,25 +455,25 @@ function states.game.draw(self)
     elseif explosion.time > 10 then
       sprite = ss.explosion[1]
     end
-    spr(sprite,explosion.x-4,explosion.y-4)
+    spr(sprite,explosion.x-4+self:s(),explosion.y-4+self:s())
   end
   if self.player.cloak > 0 then
-    spr(ss.player[2],self.player.x-8,self.player.y-8,2,2)
+    spr(ss.player[2],self.player.x-8+self:s(),self.player.y-8+self:s(),2,2)
   else
-    spr(ss.player[1],self.player.x-8,self.player.y-8,2,2)
+    spr(ss.player[1],self.player.x-8+self:s(),self.player.y-8+self:s(),2,2)
   end
   if self.player.cloak_reload == 0 then
-    spr(ss.ui.cloak[2],4,116)
+    spr(ss.ui.cloak[2],4+self:s(),116+self:s())
   else
-    spr(ss.ui.cloak[1],4,116)
+    spr(ss.ui.cloak[1],4+self:s(),116+self:s())
   end
   for i = 1,self.player.upgrades.shield do
     if self.player.shield < i then
-      spr(ss.ui.shield[1],i*8+8,116)
+      spr(ss.ui.shield[1],i*8+8+self:s(),116+self:s())
     else
-      spr(ss.ui.shield[2],i*8+8,116)
+      spr(ss.ui.shield[2],i*8+8+self:s(),116+self:s())
     end
   end
   palt()
-  printc(self.player.score.."",2)
+  printc(self.player.score.."",2+self:s())
 end
