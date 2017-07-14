@@ -11,8 +11,12 @@ function printb(t,x,y,c)
   print(t,x,y)
 end
 
+function printf(t,x,y,w,c)
+  printb(t,x+(w-#t*4)/2,y,c)
+end
+
 function printc(t,y,c)
-  printb(t,(128-#t*4)/2,y,c)
+  printf(t,0,y,128,c)
 end
 
 function pallight(i)
