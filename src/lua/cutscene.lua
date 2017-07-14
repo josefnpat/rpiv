@@ -35,7 +35,7 @@ end
 function states.cutscene.draw(self)
   cls()
   pallight(self.fadein or 100)
-  spr(0,0,0,16,self.place and 8 or 16)
+  spr(0,0,0,16,16)
   pal()
   local frame = self.c[self.current][self.frame]
   if frame.placetext or frame.persontext then
