@@ -299,7 +299,7 @@ function states.game.update(self)
 
   self.enemy_spawn = max(0,self.enemy_spawn-1)
   if self.enemy_spawn == 0 then
-    self.enemy_spawn = 60-self.level*15
+    self.enemy_spawn = hard and 10-self.level*3 or 60-self.level*15
     local enemy = self.enemies_stack[#self.enemies_stack]
     if enemy then
       del(self.enemies_stack,enemy)
@@ -475,4 +475,7 @@ function states.game.draw(self)
   end
   palt()
   printc(self.player.score.."",2+self:s())
+  if hard then
+    printc("!easy mode!",28)
+  end
 end

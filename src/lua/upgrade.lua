@@ -7,7 +7,6 @@ function states.upgrade.load(self)
     {x=20,y=84,name="shield"},
     {x=84,y=84,name="cloak"},
   }
-  self.cost = {100,500,1000}
 end
 
 function states.upgrade.enter(self)
@@ -21,6 +20,7 @@ function states.upgrade.enter(self)
     end
   end
 
+  self.cost = hard and {250,1000,2500} or {100,500,1000}
 end
 
 function states.upgrade.draw(self)

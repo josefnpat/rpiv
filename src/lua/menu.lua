@@ -139,12 +139,40 @@ function states.menu.load(self)
     return_to_menu,
   }
 
-  self.diff_joke = "difficulty: hard"
+  self.diff = 1
+  self.diff_string = {
+    "difficulty: hard",
+    "difficulty: just as hard",
+    "difficulty: still hard",
+    "wait, is the game not hard?",
+    "i think it's hard...",
+    "i'm really good at shmups.",
+    "i got to level 2.",
+    "...",
+    "this isn't an easter egg...",
+    "baka sempai ... nyan ...",
+    "hold up.",
+    "are you saying that i'm bad?",
+    "how dare you insult me!",
+    "i just made this game...",
+    "but no, you had to press it.",
+    "and push my buttons.",
+    "fine.",
+    "have it your way.",
+    "your ass is grass.",
+    "difficulty: easy",
+  }
 
   self.m.options = {
     {
-      text = function() return self.diff_joke end,
-      exec = function() self.diff_joke = "difficulty: still hard" end,
+      text = function() return self.diff_string[self.diff] end,
+      exec = function()
+        if self.diff == #self.diff_string-1 then
+          hard=true
+          self.subtitle = "video games are easy"
+        end
+        self.diff = self.diff_string[self.diff+1] and self.diff+1 or self.diff
+      end,
     },
     return_to_menu,
   }
@@ -204,6 +232,8 @@ function states.menu.load(self)
     "do not distribute",
     "pirated version",
     "insert subtitle here",
+    "send help",
+    "sleep is for the weak",
   }
   self.title = "r e d  p l a n e t  i v"
   unlocked = {}

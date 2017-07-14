@@ -1,9 +1,14 @@
 states.resist = {}
 
+function states.resist.load(self)
+  self.deaths = 0
+end
+
 function states.resist.enter(self)
   self.continue = true
   self.fadein = 0
   self.fadeout = nil
+  self.deaths += 1
   load_ss('level1')
 end
 
@@ -12,6 +17,11 @@ function states.resist.draw(self)
   spr(0,0,0,16,16)
   printc("you are shot down in",32-4)
   printc("hostile territory",32+4)
+
+  if hard then
+    printc("lives remaining: "..(4-self.deaths),60)
+  end
+
   printc("resist? "..(self.continue and "yes" or "no"),96-4)
 end
 
